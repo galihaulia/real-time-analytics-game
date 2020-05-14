@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(expSession({
-  key: 'user_sid',
+  key: 'user_id',
   secret: 'somerandonstuffs',
   resave: false,
   saveUninitialized: false,
@@ -39,18 +39,18 @@ app.use(expSession({
   }
 }));
 
+app.use((req, res, next) => {
+  if (req.cookies.user_id && !req.session.user) {
+      res.clearCookie('user_id');        
+  }
+  next();
+});
+
 // view engine setup
 app.engine('hbs', hbs({extname: 'hbs',defaultLayout: 'layout'})); 
 // app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use((req, res, next) => {
-  if (req.cookies.user_sid && !req.session.user) {
-      res.clearCookie('user_sid');        
-  }
-  next();
-});
 
 app.use('/', indexRouter)
 app.use('/', cloudRouter);
