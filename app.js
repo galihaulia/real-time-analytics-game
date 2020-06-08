@@ -2,6 +2,8 @@ const createError = require('http-errors');
 const express = require('express');
 const expSession = require('express-session');
 const hbs = require('express-handlebars');
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -18,7 +20,7 @@ db.authenticate()
     console.log('Connection has been established successfully.');
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    console.error('Unable to connect to the database : ', err);
   });
 //#endregion
 
@@ -29,25 +31,35 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// app.use(expSession({
+//   key: 'user_id',
+//   secret: 'somerandonstuffs',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//       expires: 600000
+//   }
+// }));
+
+// app.use((req, res, next) => {
+//   if (req.cookies.user_id && !req.session_info) {
+//       res.clearCookie('user_id');        
+//   }
+//   next();
+// });
+
 app.use(expSession({
-  key: 'user_id',
-  secret: 'somerandonstuffs',
+  secret: 'galih',
   resave: false,
-  saveUninitialized: false,
-  cookie: {
-      expires: 600000
-  }
+  saveUninitialized: false
 }));
 
-app.use((req, res, next) => {
-  if (req.cookies.user_id && !req.session.user) {
-      res.clearCookie('user_id');        
-  }
-  next();
-});
-
 // view engine setup
-app.engine('hbs', hbs({extname: 'hbs',defaultLayout: 'layout'})); 
+app.engine('hbs', hbs({
+  extname: 'hbs',
+  handlebars: allowInsecurePrototypeAccess(Handlebars),
+  defaultLayout: 'layout'
+})); 
 // app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -56,8 +68,10 @@ app.use('/', indexRouter)
 app.use('/', cloudRouter);
 
 // route for handling 404 requests(unavailable routes)
-app.use(function (req, res, next) {
-res.status(404).send("Sorry can't find that!")
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 //#region default

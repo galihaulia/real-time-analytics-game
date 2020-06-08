@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   User.associate = function(models) {
-    // associations can be defined here
+    User.hasMany(models.Project, {
+      foreignKey: 'id_developer',
+      as: 'project'
+    })
   };
   
   User.beforeCreate((user, options) => {

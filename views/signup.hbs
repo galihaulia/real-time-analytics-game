@@ -4,7 +4,7 @@
             <h4>Sign Up</h4>
         </div>
         <div class="d-xl-flex justify-content-center">
-            <form action="/signup" method="post">
+            <form method="post" id="register_form">
                 <div class="form-group row">
                     <input type="text" class="form-control" placeholder="Developer Name" name="developer_name">
                 </div>
@@ -24,3 +24,41 @@
         </div>                  
     </div>          
 </div>
+<script type='text/javascript' charset='utf-8' src="../components/jquery/dist/jquery.min.js"></script>
+<script type='text/javascript'>
+    $(document).ready(function(){
+        $("#register_form").submit(function(event){
+            event.preventDefault();
+            data = $("#register_form").serialize();
+            //$("#f_admin *").prop("disabled","disabled");
+            $(".formload").show();
+
+            var email			= $("[name='email']").val();
+            var username		= $("[name='username']").val();
+            var password		= $("[name='password']").val();
+            var developer_name  = $("[name='developer_name']").val();
+
+            $.ajax({
+                url: "../auth/signup",
+                type: "POST",
+                data: {email:email,username:username,password:password,developer_name:developer_name},
+                success: function(data,result,status) {
+                            response = data;
+                            if(response.status = "success"){
+                                $('[name="email"]').focus();
+                                $(".formload").hide();
+                                $(".notification").html(response.message);
+                                window.location.href = "./login";
+                            }
+                },
+                error: function(jqXhr,result,errorThrown){
+                            if(result = "error"){
+                                $('[name="email"]').focus();
+                                $(".formload").hide();
+                                $(".notification").html(jqXhr.statusText);
+                            }
+                }
+            });
+        });
+    });
+</script>

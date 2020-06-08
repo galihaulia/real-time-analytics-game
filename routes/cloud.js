@@ -2,54 +2,74 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models').User;
 
-const sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.redirect('/dashboard');
-    } else {
-        next();
-    }    
-  };
+const auth = require('../controller/auth');
+const dashboard = require('../controller/dashboard');
+const project = require('../controller/project');
+
+// const sessionChecker = (req, res, next) => {
+//     if (req.session_info && req.cookies.user_id) {
+//         req.session_info = req.session;
+//         res.redirect('/dashboard');
+//     } else {
+//         next();
+//     }
+//     console.log('Session Cek');    
+//     console.log(req.session_info);
+// };
 
 // router.get('/', (req, res, next) => {
 //     res.render('landing', {layout: 'layout_LandingPage'});
 // });
+
+router.post('/auth/login', auth.login);
+router.post('/auth/signup', auth.signup);
+router.get('/auth/edit/:id', auth.edit);
+router.put('/auth/update', auth.update);
 
 //#region signup
 router.get('/signup', (req, res, next) => {
     res.render('signup', {layout: 'layout_Login'});
 })
 
-router.post('/signup', (req, res, next) => {
-    const dataUser = {
-        developer_name: req.body.developer_name,
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password
-    }
-    User.findOne({
-            where: {
-                email: req.body.email
-            }
-        })
-        .then(user => {
-            if(!user){
-                User.create(dataUser)
-                    .then(user => {
-                        req.session.user = user.dataValues;
-                        // res.redirect('/dashboard');
-                        res.json(user);
-                    })
-                    .catch(err => {
-                        // res.redirect('/signup');
-                        res.send('error create: ' + err)
-                    });
-            }else{
-                res.json({error: 'udah ada'})
-            }
-        })
-        .catch(err => {
-            res.send('error findOne: ' + err)
-        })
+//#region signup awal
+// router.get('/signup', (req, res, next) => {
+//     res.render('signup', {layout: 'layout_Login'});
+// })
+
+// router.post('/signup', (req, res, next) => {
+//     const dataUser = {
+//         developer_name: req.body.developer_name,
+//         email: req.body.email,
+//         username: req.body.username,
+//         password: req.body.password
+//     }
+//     User.findOne({
+//             where: {
+//                 email: req.body.email
+//             }
+//         })
+//         .then(user => {
+//             if(!user){
+//                 User.create(dataUser)
+//                     .then(user => {
+//                         req.session_info = user.dataValues.id;
+//                         res.redirect('/dashboard');
+//                     })
+//                     .catch(err => {
+//                         res.redirect('/signup');
+//                         // res.send('gagal create');
+//                     });
+//                     console.log('Signup Cek');    
+//                     console.log(req.session_info);
+//             }else{
+//                 res.redirect('/signup');
+//                 // res.send('sudah ada');
+//             }
+//         })
+//         .catch(err => {
+//             res.redirect('/signup');
+//             // res.send('gagal findOne' + err);
+//         })
 
     //#region post signup Default
     // User.create({
@@ -66,38 +86,48 @@ router.post('/signup', (req, res, next) => {
     //     res.redirect('/signup');
     // });
     //#endregion
-});
+// });
+//#endregion
 //#endregion
 
+
 //#region login
-router.get('/login', sessionChecker, (req, res, next) => {
+router.get('/login', (req, res, next) => {
     res.render('login', {layout: 'layout_Login'});
 });
-router.post('/login', (req, res, next) => {
-    const dataUser = {
-        username: req.body.username,
-        password: req.body.password
-    }
 
-    User.findOne({
-            where: {
-                username: dataUser.username
-            } 
-        })
-        .then(user => {
-            if (!user) {
-                res.redirect('/login');
-            } else if (!user.validPassword(dataUser.password)) {
-                res.redirect('/login');
-            } else {
-                req.session.user = user.dataValues;
-                res.redirect('/dashboard');
-            }
-        })
-        .catch(err => {
-            res.json('error findOne: ' + err)
-        })
-    // #region post login Default 
+//#region login awal
+// router.get('/login', sessionChecker, (req, res, next) => {
+//     res.render('login', {layout: 'layout_Login'});
+// });
+// router.post('/login', (req, res, next) => {
+//     const dataUser = {
+//         username: req.body.username,
+//         password: req.body.password
+//     }
+
+//     User.findOne({
+//             where: {
+//                 username: dataUser.username
+//             } 
+//         })
+//         .then(user => {
+//             if (!user) {
+//                 res.redirect('/login');
+//             } else if (!user.validPassword(dataUser.password)) {
+//                 res.redirect('/login');
+//             } else {
+//                 req.session_info = user.dataValues.id;
+//                 res.redirect('/dashboard');
+//             }
+//             console.log('Login Cek');
+//             console.log(req.session_info);
+//         })
+//         .catch(err => {
+//             res.redirect('/login');
+//             // res.send('gagal findOne' + err);
+//         })
+    // #region post login awal 
     // const username = req.body.username,
     //         password = req.body.password;
 
@@ -113,20 +143,24 @@ router.post('/login', (req, res, next) => {
     //     }
     // });
     // #endregion
-
-});
+// });
+//#endregion
 //#endregion
 
 //#region dashboard
-router.get('/dashboard', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.render('dashboard', {layout: 'layout_AdminPanel', user: req.session.user});
-    }
-    else {
-        res.redirect('/login');
-    }
-    console.log(req.session.user);
-    console.log(req.cookies.user_id);
+router.get('/dashboard', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
+    res.render('dashboard', {layout: 'layout_AdminPanel', user: res.raw_master,});
+
+    //#region dashboard awal
+    // if (req.session_info && req.cookies.user_id) {
+    //     res.render('dashboard', {layout: 'layout_AdminPanel', user: req.session_info});
+    // }
+    // else {
+    //     res.redirect('/login');
+    // }
+    // console.log('Dashboard Cek');
+    // console.log(req.session_info);
+    //#endregion
 });
 //#endregion
 
@@ -142,14 +176,15 @@ router.get('/chart', (req, res, next) => {
 //#endregion
 
 //#region project
-router.get('/project', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.render('project', {layout: 'layout_AdminPanel', user: req.session.user});
-    }
-    else {
-        res.redirect('/login');
-    }
+router.get('/project', auth.checkLogin, project.showProject, (req, res, next) => {
+    res.render('project', {
+        layout: 'layout_AdminPanel',
+        session_info: res.session_info,
+        project: res.dataProjectShow
+    });
 });
+
+router.post('/project/', project.createProject);
 //#endregion
 
 //#region activity
@@ -199,29 +234,77 @@ router.get('/logout', (req, res) => {
 //#endregion
 
 //#region profile
-router.get('/profile', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) { 
-        User.findOne({
-            // where: {
-            //     id: req.session.user.id
-            // }            
-        })
-        .then(user => {
-            if(user){
-                res.json(user.id)
-            }else{
-                res.send('gagal')
-            }
-        })
-        .catch(err => {
-            res.send('error: ' + err)
-        })
-        // res.render('chart', {layout: 'layout_AdminPanel'});
-    }
-    else {
-        res.redirect('/dashboard');
-    }
+router.get('/profile', auth.checkLogin, (req, res, next) => {
+    res.render('profile', {layout: 'layout_AdminPanel', user: res.session_info});
+
+    //#region awal 2
+    // User.findOne({
+    //         where: {
+    //             id: parseInt(req.session.user.id)
+    //         }            
+    //     })
+    //     .then(user => {
+    //         if(user){
+    //             res.render('profile', {layout: 'layout_AdminPanel', user: req.session.user});
+    //             // res.json(user)
+    //         }else{
+    //             res.send('gagal')
+    //         }
+    //     })
+    //     .catch(err => {
+    //         res.send('gagal findOne: ' + err)
+    //     })
+    //     console.log(req.session.user);
+    //#endregion
+    //#region awal
+    // if (req.session.user && req.cookies.user_id) {
+    //     res.render('profile', {layout: 'layout_AdminPanel', user: req.session.user});
+    //     User.findOne({
+    //         // where: {
+    //         //     id: req.session.user.id
+    //         // }            
+    //     })
+    //     .then(user => {
+    //         if(user){
+    //             res.json(user.id)
+    //         }else{
+    //             res.send('gagal')
+    //         }
+    //     })
+    //     .catch(err => {
+    //         res.send('error: ' + err)
+    //     })
+    //     res.render('chart', {layout: 'layout_AdminPanel', user: req.session.user});
+    // }
+    // else {
+    //     res.redirect('/dashboard');
+    // }
+    //#endregion
 });
+// router.post('/profileUpdate', (req, res, next) => {
+//     const dataUser = {
+//         developer_name: req.body.developer_name,
+//         email: req.body.email,
+//         username: req.body.username,
+//         description: req.body.description,
+//         address: req.body.address,
+//         phone: req.body.phone
+//     }
+//     User.update(dataUser, {
+//             where:{
+//                 id: parseInt(req.session.user.id) 
+//             }
+//         })
+//         .then(user => {
+//             req.session.user = user.dataValue;
+//             // res.redirect('/profile');
+//             res.json(user.dataValue)
+//         })
+//         .catch(err => {
+//             // res.redirect('/signup');
+//             res.send('gagal update');
+//         });
+// })
 //#endregion
 
 module.exports = router;
