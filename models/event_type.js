@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Event_type.associate = function(models) {
     // associations can be defined here
+    Event_type.hasMany(models.Activity, {
+      onDelete: "cascade"
+    });
   };
   return Event_type;
 };

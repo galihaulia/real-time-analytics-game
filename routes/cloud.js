@@ -5,6 +5,8 @@ const User = require('../models').User;
 const auth = require('../controller/auth');
 const dashboard = require('../controller/dashboard');
 const project = require('../controller/project');
+const genre = require('../controller/genre');
+const eventType = require('../controller/eventType');
 
 // const sessionChecker = (req, res, next) => {
 //     if (req.session_info && req.cookies.user_id) {
@@ -149,7 +151,7 @@ router.get('/login', (req, res, next) => {
 
 //#region dashboard
 router.get('/dashboard', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
-    res.render('dashboard', {layout: 'layout_AdminPanel', user: res.raw_master,});
+    res.render('dashboard', {layout: 'layout_AdminPanel', user: res.raw_master});
 
     //#region dashboard awal
     // if (req.session_info && req.cookies.user_id) {
@@ -165,13 +167,8 @@ router.get('/dashboard', auth.checkLogin, dashboard.raw_master, (req, res, next)
 //#endregion
 
 //#region chart
-router.get('/chart', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.render('chart', {layout: 'layout_AdminPanel', user: req.session.user});
-    }
-    else {
-        res.redirect('/login');
-    }
+router.get('/chart', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
+    res.render('chart', {layout: 'layout_AdminPanel', user: res.raw_master});
 });
 //#endregion
 
@@ -184,40 +181,25 @@ router.get('/project', auth.checkLogin, project.showProject, (req, res, next) =>
     });
 });
 
-router.post('/project/', project.createProject);
+router.post('/project', project.createProject);
+//#endregion
+
+//#region genre
+router.post('/genre', genre.create);
 //#endregion
 
 //#region activity
-router.get('/activity', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.render('activity', {layout: 'layout_AdminPanel', user: req.session.user});
-    }
-    else {
-        res.redirect('/login');
-    }
+router.get('/activity', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
+    res.render('activity', {layout: 'layout_AdminPanel', user: res.raw_master});
 });
 //#endregion
 
 //#region eventType
-router.get('/eventType', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.render('eventType', {layout: 'layout_AdminPanel', user: req.session.user});
-    }
-    else {
-        res.redirect('/login');
-    }
+router.get('/eventType', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
+    res.render('eventType', {layout: 'layout_AdminPanel', user: res.raw_master});
 });
-//#endregion
 
-//#region genre
-router.get('/genre', (req, res, next) => {
-    if (req.session.user && req.cookies.user_id) {
-        res.render('genre', {layout: 'layout_AdminPanel', user: req.session.user});
-    }
-    else {
-        res.redirect('/login');
-    }
-});
+router.post('/eventType', eventType.create);
 //#endregion
 
 //#region logout

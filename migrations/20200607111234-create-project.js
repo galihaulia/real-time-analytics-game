@@ -8,29 +8,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_developer: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id'
-        }
-      },
       project_name: {
         type: Sequelize.STRING
       },
       project_desc:{
         type: Sequelize.TEXT
       },
-      id_genre: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Genres',
-          key: 'id'
-        }
-      },
       link_market: {
         allowNull: true,
         type: Sequelize.TEXT
+      },
+      UserId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      GenreId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

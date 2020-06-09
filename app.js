@@ -8,6 +8,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const indexRouter = require('./routes/index');
 // const usersRouter = require('./routes/users');
@@ -26,27 +27,11 @@ db.authenticate()
 
 const app = express();
 
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-// app.use(expSession({
-//   key: 'user_id',
-//   secret: 'somerandonstuffs',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//       expires: 600000
-//   }
-// }));
-
-// app.use((req, res, next) => {
-//   if (req.cookies.user_id && !req.session_info) {
-//       res.clearCookie('user_id');        
-//   }
-//   next();
-// });
 
 app.use(expSession({
   secret: 'galih',

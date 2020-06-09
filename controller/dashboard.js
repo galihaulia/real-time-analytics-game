@@ -5,7 +5,7 @@ const raw_master = (req, res, next) => {
     console.log('dashboard')
     User.findOne({
             where: {
-                id: req.session.id_developer
+                id: req.session.developerId
                 // developer_name: req.session.developer_name,
                 // email: req.session.email
             }
@@ -20,14 +20,14 @@ const raw_master = (req, res, next) => {
             console.log({
                 status: 'success',
                 message: `res.raw_master successfully`,
-                dataUser: res.raw_master
+                dataUser_res_raw_master: res.raw_master
             });
             next();
         })
         .catch(err => {
             console.log({
                 status: 'error',
-                message: `error raw_master findOne : ` + err
+                message: 'error raw_master findOne : ' + err
             });
             next();
         });

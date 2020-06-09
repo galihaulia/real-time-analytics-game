@@ -14,9 +14,8 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function(models) {
     User.hasMany(models.Project, {
-      foreignKey: 'id_developer',
-      as: 'project'
-    })
+      onDelete: "cascade"
+    });
   };
   
   User.beforeCreate((user, options) => {

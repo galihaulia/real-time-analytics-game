@@ -17,15 +17,18 @@
                     <th scope="col">#</th>
                     <th scope="col">Project Name</th>
                     <th scope="col">Project Description</th>
+                    <th scope="col">Link Market</th>
+                    <th scope="col">Genre</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each project}}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row"></th>
                     <td>{{project_name}}</td>
                     <td>{{project_desc}}</td>
                     <td>{{link_market}}</td>
+                    <td>{{Genre.genre_name}}</td>
                 </tr>
                 {{/each}}
             </tbody>
@@ -42,7 +45,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" name="id_developer" value="{{session_info.id_developer}}">
+                        <input type="text" name="id_developer" value="{{session_info.developerId}}">
                         <div class="form-group row">
                             <label for="Project Name" class="col-sm-2 col-form-label col-form-label-sm">Project Name</label>
                             <div class="col-sm-10">
@@ -76,3 +79,4 @@
             </div>
         </div>
     </div>
+</div>
