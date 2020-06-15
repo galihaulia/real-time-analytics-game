@@ -1,15 +1,30 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Event_types', {
+    return queryInterface.createTable('Projects', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      event_type_name: {
+      project_name: {
         type: Sequelize.STRING
+      },
+      project_desc:{
+        type: Sequelize.TEXT
+      },
+      link_market: {
+        allowNull: true,
+        type: Sequelize.TEXT
+      },
+      DeveloperId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      GenreId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -22,6 +37,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Event_types');
+    return queryInterface.dropTable('Projects');
   }
 };

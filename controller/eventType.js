@@ -1,4 +1,4 @@
-const eventType = require("../models").Event_type;
+const eventType = require("../models").EventType;
 
 const create = (req, res, next) => {
     const dataCreate = {

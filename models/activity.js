@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     ProjectId         : DataTypes.INTEGER,
     EventTypeId       : DataTypes.INTEGER
   }, {});
+
   Activity.associate = function(models) {
     // associations can be defined here
     Activity.belongsTo(models.Project, {
@@ -14,11 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       }
     });
 
-    Activity.belongsTo(models.Event_type, {
+    Activity.belongsTo(models.EventType, {
       foreignKey: {
         allowNull: false
       }
     });
   };
+
   return Activity;
 };

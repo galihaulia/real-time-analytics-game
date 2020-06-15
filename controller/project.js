@@ -5,7 +5,7 @@ const showProject = (req, res, next) => {
     console.log('project')
     Project.findAll({
                 where: {
-                    UserId: req.session.developerId
+                    DeveloperId: req.session.developerId
                 },
                 include:[Genre]
             })
@@ -13,13 +13,13 @@ const showProject = (req, res, next) => {
                 console.log({
                     status: 'success',
                     message: `ProjectShow findAll successfully`,
-                    dataProject: data
+                    dataAllProject: data
                 });
-                res.dataProjectShow = data;
+                res.dataAllProject = data;
                 console.log({
                     status: 'success',
-                    message: `res.dataProjectShow successfully`,
-                    dataProject_res_dataProjectShow: res.dataProjectShow
+                    message: `res.dataAllProject successfully`,
+                    dataAllProject_res_dataAllProject: res.dataAllProject
                 });
                 next();
             })
@@ -37,8 +37,8 @@ const createProject = (req, res, next) => {
         project_name: req.body.project_name,
         project_desc: req.body.project_desc,
         link_market: req.body.link_market,
-        GenreId: req.body.GenreId,
-        UserId: req.body.UserId
+        DeveloperId: req.body.developerId,
+        GenreId: req.body.GenreId
     }
     Project.create(dataProjectCreate)
             .then(data => {

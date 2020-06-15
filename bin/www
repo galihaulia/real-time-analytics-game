@@ -28,20 +28,20 @@ io = socketIo(server);
 
 var clients = [];
 io.on('connection', (socket) => {
-  console.log('web connect');
-  console.log(socket.id);
+  // console.log('web connect');
+  // console.log(socket.id);
   var currentUser;
   socket.on('User Connect', () => {
     console.log('User Connect');
     for(var i = 0; i < clients.length; i++){
-      socket.emit('User Connected', {item:clients[i]});
-      console.log('User Connected is ' +clients[i] , socket.id);
+      // socket.emit('User Connected', {item:clients[i]});
+      console.log('User Connected is ' + clients[i] , socket.id);
     }
   });
 
   socket.on('Action', (data) => {
     console.log(data);
-    // activity(data);
+    activity(data);
     currentUser = {
       item:data.object_name
     }
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('User disconnect is', socket.id);
-    socket.emit('User Disconnected', socket.id);
+    // socket.emit('User Disconnected', socket.id);
   });
 });
 //#endregion
@@ -63,13 +63,13 @@ const Pusher = require('pusher');
 const Activity = require('../models').Activity;
 
 function activity(data){
-  Activity.create({
-    object_name: data.object_name,
-    ip: data.ip,
-    ProjectId: data.ProjectId,
-    EventTypeId: data.EventTypeId
-  })
-  console.log('db ok');
+  // Activity.create({
+  //   object_name: data.object_name,
+  //   ip: data.ip,
+  //   ProjectId: data.ProjectId,
+  //   EventTypeId: data.EventTypeId
+  // })
+  // console.log('db ok');
 
   var pusher = new Pusher({
     appId: '928180',
@@ -79,11 +79,27 @@ function activity(data){
     encrypted: true
   });
   
-  pusher.trigger('channel', 'event', {
-    points: 1,
-    object_name:data.object_name
-  });
-  console.log('ok pusher');
+  if(data.EventTypeId == '3' || data.EventTypeId ==  '4'){
+    console.log('data id 3 & 4');
+    pusher.trigger('button', 'button-e', {
+      points: 1,
+      object_name:data.object_name
+    });
+    console.log({
+      status: 'succes',
+      data: data
+    });
+  }else if(data.EventTypeId == '1' || data.EventTypeId ==  '2'){
+    console.log('data id 1 & 2');
+    pusher.trigger('active', 'active-e', {
+      points: 1,
+      object_name:data.object_name
+    });
+    console.log({
+      status: 'succes',
+      data: data
+    });
+  }
 }
 //#endregion
 

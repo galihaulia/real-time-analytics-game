@@ -1,16 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Project = sequelize.define('Project', {
-    project_name: DataTypes.STRING,
-    project_desc: DataTypes.TEXT,
-    link_market : DataTypes.TEXT,
-    UserId      : DataTypes.INTEGER,
-    GenreId     : DataTypes.INTEGER
+    project_name  : DataTypes.STRING,
+    project_desc  : DataTypes.TEXT,
+    link_market   : DataTypes.TEXT,
+    DeveloperId   : DataTypes.INTEGER,
+    GenreId       : DataTypes.INTEGER
   }, {});
 
   Project.associate = function(models) {
     // associations can be defined here
-    Project.belongsTo(models.User,{
+    Project.belongsTo(models.Developer,{
       foreignKey: {
         allowNull: false
       }
@@ -26,6 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "cascade"
     });
   };
-    
+
   return Project;
 };

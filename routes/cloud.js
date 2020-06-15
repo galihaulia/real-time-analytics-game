@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models').User;
 
 const auth = require('../controller/auth');
+const developer = require('../controller/developer');
 const dashboard = require('../controller/dashboard');
 const project = require('../controller/project');
 const genre = require('../controller/genre');
@@ -150,8 +151,11 @@ router.get('/login', (req, res, next) => {
 //#endregion
 
 //#region dashboard
-router.get('/dashboard', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
-    res.render('dashboard', {layout: 'layout_AdminPanel', user: res.raw_master});
+router.get('/dashboard', auth.checkLogin, developer.devInfo, (req, res, next) => {
+    res.render('dashboard', {
+        layout: 'layout_AdminPanel',
+        devInfo: res.devInfo
+    });
 
     //#region dashboard awal
     // if (req.session_info && req.cookies.user_id) {
@@ -167,17 +171,21 @@ router.get('/dashboard', auth.checkLogin, dashboard.raw_master, (req, res, next)
 //#endregion
 
 //#region chart
-router.get('/chart', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
-    res.render('chart', {layout: 'layout_AdminPanel', user: res.raw_master});
+router.get('/chart', auth.checkLogin, developer.devInfo, project.showProject, (req, res, next) => {
+    res.render('chart', {
+        layout: 'layout_AdminPanel',
+        devInfo: res.devInfo,
+        project: res.dataAllProject
+    });
 });
 //#endregion
 
 //#region project
-router.get('/project', auth.checkLogin, project.showProject, (req, res, next) => {
+router.get('/project', auth.checkLogin, developer.devInfo, project.showProject, (req, res, next) => {
     res.render('project', {
         layout: 'layout_AdminPanel',
-        session_info: res.session_info,
-        project: res.dataProjectShow
+        devInfo: res.devInfo,
+        project: res.dataAllProject
     });
 });
 
@@ -216,8 +224,11 @@ router.get('/logout', (req, res) => {
 //#endregion
 
 //#region profile
-router.get('/profile', auth.checkLogin, (req, res, next) => {
-    res.render('profile', {layout: 'layout_AdminPanel', user: res.session_info});
+router.get('/profile', auth.checkLogin, developer.devInfo, (req, res, next) => {
+    res.render('profile', {
+        layout: 'layout_AdminPanel',
+        devInfo: res.devInfo
+    });
 
     //#region awal 2
     // User.findOne({

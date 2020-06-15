@@ -53,8 +53,8 @@ app.use('/', indexRouter)
 app.use('/', cloudRouter);
 
 // route for handling 404 requests(unavailable routes)
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+app.use(function(err, req, res, next) {
+  var err = new Error('Error : '+err);
   err.status = 404;
   next(err);
 });

@@ -1,6 +1,6 @@
 const Developer = require('../models').Developer;
 
-const raw_master = (req, res, next) => {
+const devInfo = (req, res, next) => {
     console.log('dashboard')
     Developer.findOne({
                 where: {
@@ -12,27 +12,27 @@ const raw_master = (req, res, next) => {
             .then(data => {
                 console.log({
                     status: 'success',
-                    message: `raw_master findOne successfully`,
+                    message: `devInfo findOne successfully`,
                     dataDeveloper: data
                 });
-                res.raw_master = data.dataValues;
+                res.devInfo = data.dataValues;
                 console.log({
                     status: 'success',
-                    message: `res.raw_master successfully`,
-                    dataDeveloper_res_raw_master: res.raw_master
+                    message: `res.devInfo successfully`,
+                    dataDeveloper_res_devInfo: res.devInfo
                 });
                 next();
             })
             .catch(err => {
                 console.log({
                     status: 'error',
-                    message: 'error raw_master findOne : ' + err
+                    message: 'error devInfo findOne : ' + err
                 });
                 next();
             });
 }
 
 module.exports = {
-    raw_master: raw_master
+    devInfo: devInfo
 }
 
