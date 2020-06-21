@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Project = sequelize.define('Project', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     project_name  : DataTypes.STRING,
     project_desc  : DataTypes.TEXT,
     link_market   : DataTypes.TEXT,

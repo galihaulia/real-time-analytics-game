@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models').User;
 
-const auth = require('../controller/auth');
-const developer = require('../controller/developer');
-const dashboard = require('../controller/dashboard');
-const project = require('../controller/project');
-const genre = require('../controller/genre');
-const eventType = require('../controller/eventType');
+const auth = require('../controller/authController');
+const developer = require('../controller/developerController');
+const dashboard = require('../controller/dashboardController');
+const project = require('../controller/projectController');
+const genre = require('../controller/genreController');
+const eventType = require('../controller/eventTypeController');
+const activity = require('../controller/activityController');
 
 // const sessionChecker = (req, res, next) => {
 //     if (req.session_info && req.cookies.user_id) {
@@ -200,11 +201,18 @@ router.post('/genre', genre.create);
 router.get('/activity', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
     res.render('activity', {layout: 'layout_AdminPanel', user: res.raw_master});
 });
+
+router.get('/api/showActs', activity.showActs);
 //#endregion
 
 //#region eventType
-router.get('/eventType', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
-    res.render('eventType', {layout: 'layout_AdminPanel', user: res.raw_master});
+router.get('/eventType', auth.checkLogin, dashboard.raw_master, project.showProject, eventType.showEvent, (req, res, next) => {
+    res.render('eventType', {
+        layout: 'layout_AdminPanel',
+        user: res.raw_master,
+        project: res.dataAllProject,
+        eventType: res.dataAllEventType
+    });
 });
 
 router.post('/eventType', eventType.create);

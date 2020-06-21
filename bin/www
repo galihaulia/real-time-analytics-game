@@ -61,45 +61,54 @@ io.on('connection', (socket) => {
 //#region Pusher
 const Pusher = require('pusher');
 const Activity = require('../models').Activity;
+const keys = require('../config/pusherKeys');
 
 function activity(data){
-  // Activity.create({
-  //   object_name: data.object_name,
-  //   ip: data.ip,
-  //   ProjectId: data.ProjectId,
-  //   EventTypeId: data.EventTypeId
-  // })
-  // console.log('db ok');
-
-  var pusher = new Pusher({
-    appId: '928180',
-    key: '79878da23c4fd7ff4af2',
-    secret: '5e506fdd1bc265f98c16',
-    cluster: 'ap1',
-    encrypted: true
-  });
   
-  if(data.EventTypeId == '3' || data.EventTypeId ==  '4'){
-    console.log('data id 3 & 4');
-    pusher.trigger('button', 'button-e', {
-      points: 1,
-      object_name:data.object_name
-    });
-    console.log({
-      status: 'succes',
-      data: data
-    });
-  }else if(data.EventTypeId == '1' || data.EventTypeId ==  '2'){
-    console.log('data id 1 & 2');
-    pusher.trigger('active', 'active-e', {
-      points: 1,
-      object_name:data.object_name
-    });
-    console.log({
-      status: 'succes',
-      data: data
-    });
+  var pusher = new Pusher({
+    appId: keys.pusherAppId,
+    key: keys.pusherKey,
+    secret: keys.pusherSecret,
+    cluster: keys.pusherCluster,
+    encrypted: keys.pusherEncrypted
+  });
+
+  const dataAct = {
+    object_name: data.object_name,
+    ProjectId: data.ProjectId,
+    EventTypeId: data.EventTypeId
   }
+  Activity.create(dataAct)
+          .then(() => {
+            if(dataAct.EventTypeId == '3' || dataAct.EventTypeId ==  '4'){
+              console.log('data id 3 & 4');
+              pusher.trigger('button', 'button-e', {
+                points: 1,
+                object_name:dataAct.object_name
+              });
+              console.log({
+                status: 'succes',
+                message: 'pusher trigger',
+                data: dataAct
+              });
+            }else if(dataAct.EventTypeId == '1' || dataAct.EventTypeId ==  '2'){
+              console.log('data id 1 & 2');
+              pusher.trigger('active', 'active-e', {
+                points: 1,
+                object_name:dataAct.object_name
+              });
+              console.log({
+                status: 'succes',
+                message: 'pusher trigger',
+                data: dataAct
+              });
+            }
+            console.log({
+              status: 'succes',
+              message: 'create dataAct',
+              data: dataAct
+            });
+          });
 }
 //#endregion
 

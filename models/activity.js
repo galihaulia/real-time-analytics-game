@@ -1,10 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Activity = sequelize.define('Activity', {
-    object_name       : DataTypes.STRING,
-    ip                : DataTypes.STRING,
-    ProjectId         : DataTypes.INTEGER,
-    EventTypeId       : DataTypes.INTEGER
+    object_name : DataTypes.STRING,
+    ip          : DataTypes.STRING,
+    ProjectId   : DataTypes.UUID,
+    EventTypeId : DataTypes.INTEGER
   }, {});
 
   Activity.associate = function(models) {
