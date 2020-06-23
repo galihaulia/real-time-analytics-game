@@ -32,7 +32,9 @@ router.put('/auth/update', auth.update);
 
 //#region signup
 router.get('/signup', (req, res, next) => {
-    res.render('signup', {layout: 'layout_Login'});
+    res.render('cloud/signup', {
+        title: 'Sign Up'
+    });
 })
 
 //#region signup awal
@@ -94,10 +96,11 @@ router.get('/signup', (req, res, next) => {
 //#endregion
 //#endregion
 
-
 //#region login
 router.get('/login', (req, res, next) => {
-    res.render('login', {layout: 'layout_Login'});
+    res.render('cloud/login', {
+        title: 'Log In'
+    });
 });
 
 //#region login awal
@@ -153,8 +156,8 @@ router.get('/login', (req, res, next) => {
 
 //#region dashboard
 router.get('/dashboard', auth.checkLogin, developer.devInfo, (req, res, next) => {
-    res.render('dashboard', {
-        layout: 'layout_AdminPanel',
+    res.render('cloud/dashboard', {
+        title: 'Real-Time Analytic Game',
         devInfo: res.devInfo
     });
 
@@ -173,8 +176,8 @@ router.get('/dashboard', auth.checkLogin, developer.devInfo, (req, res, next) =>
 
 //#region chart
 router.get('/chart', auth.checkLogin, developer.devInfo, project.showProject, (req, res, next) => {
-    res.render('chart', {
-        layout: 'layout_AdminPanel',
+    res.render('cloud/chart', {
+        title: 'Real-Time Analytic Game',
         devInfo: res.devInfo,
         project: res.dataAllProject
     });
@@ -182,11 +185,12 @@ router.get('/chart', auth.checkLogin, developer.devInfo, project.showProject, (r
 //#endregion
 
 //#region project
-router.get('/project', auth.checkLogin, developer.devInfo, project.showProject, (req, res, next) => {
-    res.render('project', {
-        layout: 'layout_AdminPanel',
+router.get('/project', auth.checkLogin, developer.devInfo, project.showProject, genre.showGenre, (req, res, next) => {
+    res.render('cloud/project', {
+        title: 'Real-Time Analytic Game',
         devInfo: res.devInfo,
-        project: res.dataAllProject
+        project: res.dataAllProject,
+        genre: res.dataAllGenre
     });
 });
 
@@ -198,18 +202,21 @@ router.post('/genre', genre.create);
 //#endregion
 
 //#region activity
-router.get('/activity', auth.checkLogin, dashboard.raw_master, (req, res, next) => {
-    res.render('activity', {layout: 'layout_AdminPanel', user: res.raw_master});
+router.get('/activity', auth.checkLogin, developer.devInfo, (req, res, next) => {
+    res.render('cloud/activity', {
+        title: 'Real-Time Analytic Game',
+        devInfo: res.devInfo
+    });
 });
 
 router.get('/api/showActs', activity.showActs);
 //#endregion
 
 //#region eventType
-router.get('/eventType', auth.checkLogin, dashboard.raw_master, project.showProject, eventType.showEvent, (req, res, next) => {
-    res.render('eventType', {
-        layout: 'layout_AdminPanel',
-        user: res.raw_master,
+router.get('/eventType', auth.checkLogin, developer.devInfo, project.showProject, eventType.showEvent, (req, res, next) => {
+    res.render('cloud/eventType', {
+        title: 'Real-Time Analytic Game',
+        devInfo: res.devInfo,
         project: res.dataAllProject,
         eventType: res.dataAllEventType
     });

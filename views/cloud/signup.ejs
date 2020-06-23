@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> </title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="/css/log/style_log.css" rel="stylesheet" >
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <div class="d-xl-flex justify-content-center" id="title_login">
+                <h4>Sign Up</h4>
+            </div>
+            <div class="d-xl-flex justify-content-center">
+                <form method="post" id="register_form">
+                    <div class="form-group row">
+                        <input type="text" class="form-control" placeholder="Developer Name" name="developer_name">
+                    </div>
+                    <div class="form-group row">
+                        <input type="text" class="form-control" placeholder="Email" name="email">
+                    </div>
+                    <div class="form-group row">
+                        <input type="text" class="form-control" placeholder="Username" name="username">
+                    </div>
+                    <div class="form-group row">
+                        <input type="password" class="form-control" placeholder="Password" name="password">
+                    </div>
+                    <div class="form-group row">
+                        <input class="btn btn-primary btn-log" type="submit" value="Sign Up"/>
+                    </div>
+                </form>
+            </div>                  
+        </div>          
+    </div>
+    <script type='text/javascript' charset='utf-8' src="../components/jquery/dist/jquery.min.js"></script>
+    <script type='text/javascript'>
+        $(document).ready(function(){
+            $("#register_form").submit(function(event){
+                event.preventDefault();
+                data = $("#register_form").serialize();
+                //$("#f_admin *").prop("disabled","disabled");
+                $(".formload").show();
+    
+                var email			= $("[name='email']").val();
+                var username		= $("[name='username']").val();
+                var password		= $("[name='password']").val();
+                var developer_name  = $("[name='developer_name']").val();
+    
+                $.ajax({
+                    url: "../cloud/auth/signup",
+                    type: "POST",
+                    data: {email:email,username:username,password:password,developer_name:developer_name},
+                    success: function(data,result,status) {
+                                response = data;
+                                if(response.status = "success"){
+                                    $('[name="email"]').focus();
+                                    $(".formload").hide();
+                                    $(".notification").html(response.message);
+                                    window.location.href = "./login";
+                                }
+                    },
+                    error: function(jqXhr,result,errorThrown){
+                                if(result = "error"){
+                                    $('[name="email"]').focus();
+                                    $(".formload").hide();
+                                    $(".notification").html(jqXhr.statusText);
+                                }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

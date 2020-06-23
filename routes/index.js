@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('landing', {layout: 'layout_LandingPage'});
+  res.render('landing/landing', {title: "Real-Time Game Analytic"});
 });
 
 module.exports = router;

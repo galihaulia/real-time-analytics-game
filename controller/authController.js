@@ -7,7 +7,7 @@ const checkLogin = (req, res, next) => {
         return next();
     }
     else {
-        res.redirect('/login');
+        res.redirect('/cloud/login');
         // res.session_info = {
         // cookie:
         //     { path: '/',

@@ -20,6 +20,24 @@ const create = (req, res, next) => {
             });
 }
 
+const showGenre = (req, res, next) => {
+    Genre.findAll()
+            .then(data => {
+                console.log({
+                    status: 'success',
+                    message: `findAll successfully`,
+                    dataAllGenre: data
+                });
+                res.dataAllGenre = data;
+                console.log({
+                    status: 'success',
+                    message: `res successfully`,
+                    dataAllGenre: res.dataAllGenre
+                });
+                next();
+            })
+}
 module.exports = {
-    create: create
+    create: create,
+    showGenre: showGenre
 }

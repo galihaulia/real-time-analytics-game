@@ -1,8 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Genre = sequelize.define('Genre', {
-    genre_name: DataTypes.STRING,
-    genre_desc: DataTypes.TEXT,
+    genre_name:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    genre_desc:{
+      type: DataTypes.TEXT
+    },
   }, {});
 
   Genre.associate = function(models) {

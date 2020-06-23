@@ -9,9 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       project_name: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       project_desc:{
+        allowNull: true,
         type: Sequelize.TEXT
       },
       link_market: {

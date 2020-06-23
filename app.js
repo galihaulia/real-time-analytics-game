@@ -11,7 +11,6 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const indexRouter = require('./routes/index');
-// const usersRouter = require('./routes/users');
 const cloudRouter = require('./routes/cloud');
 
 //#region connect to db
@@ -32,25 +31,19 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
 app.use(expSession({
   secret: 'galih',
   resave: false,
   saveUninitialized: false
 }));
 
-// view engine setup
-app.engine('hbs', hbs({
-  extname: 'hbs',
-  handlebars: allowInsecurePrototypeAccess(Handlebars),
-  defaultLayout: 'layout'
-})); 
-// app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+// view engine setup 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter)
-app.use('/', cloudRouter);
+app.use('/cloud', cloudRouter);
 
 // route for handling 404 requests(unavailable routes)
 app.use(function(err, req, res, next) {

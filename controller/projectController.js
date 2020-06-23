@@ -47,7 +47,7 @@ const createProject = (req, res, next) => {
                     message: `dataProjectCreate successfully`,
                     dataProjectCreate: data
                 });
-                res.redirect('/project')
+                res.redirect('/cloud/project')
             })
             .catch(function (err) {
                 res.json({

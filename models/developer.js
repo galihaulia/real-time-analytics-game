@@ -3,13 +3,31 @@ const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   const Developer = sequelize.define('Developer', {
-    developer_name  : DataTypes.STRING,
-    email           : DataTypes.STRING,
-    username        : DataTypes.STRING,
-    password        : DataTypes.STRING,
-    description     : DataTypes.STRING,
-    address         : DataTypes.STRING,
-    phone           : DataTypes.STRING,
+    developer_name:{ 
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    username:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    password:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description:{
+      type: DataTypes.TEXT
+    },
+    address:{
+      type: DataTypes.TEXT
+    },
+    phone:{
+      type: DataTypes.STRING
+    },
   }, {});
 
   Developer.associate = function(models) {
