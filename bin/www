@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
 //#region Pusher
 const Pusher = require('pusher');
 const Activity = require('../models').Activity;
+const Project = require('../models').Project;
 const keys = require('../config/pusherKeys');
 
 function activity(data){
@@ -80,36 +81,69 @@ function activity(data){
   }
   Activity.create(dataAct)
           .then(() => {
-            if(dataAct.EventTypeId == '3' || dataAct.EventTypeId ==  '4'){
-              console.log('data id 3 & 4');
-              pusher.trigger('button', 'button-e', {
-                points: 1,
-                object_name:dataAct.object_name
-              });
-              console.log({
-                status: 'succes',
-                message: 'pusher trigger',
-                data: dataAct
-              });
-            }else if(dataAct.EventTypeId == '1' || dataAct.EventTypeId ==  '2'){
-              console.log('data id 1 & 2');
-              pusher.trigger('active', 'active-e', {
-                points: 1,
-                object_name:dataAct.object_name
-              });
-              console.log({
-                status: 'succes',
-                message: 'pusher trigger',
-                data: dataAct
-              });
-            }
+            Project.findOne({
+                      attributes:['id'],
+                      where:{
+                        id: dataAct.ProjectId
+                      }
+                    })
+                    .then(dataId => {
+                      if(!dataId){
+                        console.log({
+                          message: 'id tidak sama',
+                          data:dataId
+                        });
+                      }else{
+                        pusher.trigger('coba', 'coba-e', {
+                          points: 1,
+                          object_name:dataAct.object_name,
+                          ProjectId: dataId
+                        });
+                        console.log({
+                          status: 'succes trigger',
+                          message: 'pusher trigger',
+                        });
+                        console.log({
+                          success: true,
+                          message: 'id sama',
+                          data: dataId
+                        })
+                      }
+                    })
+                    .catch(err => {
+                      console.log({
+                        error: true,
+                        message: 'error findOne Project' + err
+                      })
+                    })
             console.log({
               status: 'succes',
               message: 'create dataAct',
               data: dataAct
-            });
-          });
+            })
+          })
+          .catch(err => {
+            console.log({
+              error: true,
+              message: 'error create' + err
+            })
+          })
 }
+// if(dataAct.EventTypeId == '1' || dataAct.EventTypeId ==  '2'){
+//   console.log('data id 1 & 2');
+//   pusher.trigger('button', 'button-e', {
+//     points: 1,
+//     object_name:dataAct.object_name
+//   });
+//   pusher.trigger('active', 'active-e', {
+//     points: 1,
+//     object_name:dataAct.object_name
+//   });
+//   console.log({
+//     status: 'succes',
+//     message: 'pusher trigger',
+//     data: dataAct
+//   });
 //#endregion
 
 

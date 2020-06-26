@@ -84,22 +84,76 @@
     <script src="/js/buttonChart.js"></script>
     <script src="/js/incorrectChart.js"></script>
     <script src="/components/chart.js/Chart.js"></script>
-
-    <script id="testP" type="text/x-ejs-template">
-        <% for( let i = 0; i < project.length; i++ ) { %>
-            <%= project[i].id %> 
-        <% } %>
-    </script>
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: '/api/showProject',
+                url: '/cloud/api/actsSelect',
                 success:function(result,status){
                     response = result;
-                    if(response.status == 'ok'){
-                        var str = $("#testP")
-                        var data = {project:response.data};
-                        var rendered = new EJS({text:str}).render(data);
+                    console.log(response);
+                    if(response.success == true){
+                        for (i = 0; i < response.data.length; i++) {
+                            var id = response.data[i];
+                            var barChartCanvas                   = document.getElementById(id.ProjectId).getContext('2d')
+                            var barChart                         = new Chart(barChartCanvas)
+                            
+                            Pusher.logToConsole = true;
+
+                            var pusher = new Pusher('79878da23c4fd7ff4af2', {
+                            cluster: 'ap1',
+                            forceTLS: true
+                            });
+
+                            var channel = pusher.subscribe('coba');
+                            channel.bind('coba-e', (data) => {
+                            });
+                            
+                            var barChartData                     = {
+                                labels  : [id.EventType.event_type_name],
+                                datasets: [
+                                    {
+                                        label               : 'User Activity',
+                                        fillColor           : 'rgba(210, 214, 222, 1)',
+                                        strokeColor         : 'rgba(210, 214, 222, 1)',
+                                        pointColor          : 'rgba(210, 214, 222, 1)',
+                                        pointStrokeColor    : '#c1c7d1',
+                                        pointHighlightFill  : '#fff',
+                                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                                        data                : [65, 10, 30, 50]
+                                    }
+                                ]
+                            }
+                            var barChartOptions                  = {
+                            //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+                            scaleBeginAtZero        : true,
+                            //Boolean - Whether grid lines are shown across the chart
+                            scaleShowGridLines      : true,
+                            //String - Colour of the grid lines
+                            scaleGridLineColor      : 'rgba(0,0,0,.05)',
+                            //Number - Width of the grid lines
+                            scaleGridLineWidth      : 1,
+                            //Boolean - Whether to show horizontal lines (except X axis)
+                            scaleShowHorizontalLines: true,
+                            //Boolean - Whether to show vertical lines (except Y axis)
+                            scaleShowVerticalLines  : true,
+                            //Boolean - If there is a stroke on each bar
+                            barShowStroke           : true,
+                            //Number - Pixel width of the bar stroke
+                            barStrokeWidth          : 2,
+                            //Number - Spacing between each of the X value sets
+                            barValueSpacing         : 5,
+                            //Number - Spacing between data sets within X values
+                            barDatasetSpacing       : 1,
+                            //String - A legend template
+                            legendTemplate          : '<ul class="%=name.toLowerCase()%>-legend">% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:%=datasets[i].fillColor%>"></span>%if(datasets[i].label){%>%=datasets[i].label%>%}%></li>%}%></ul>',
+                            //Boolean - whether to make the chart responsive
+                            responsive              : true,
+                            maintainAspectRatio     : true
+                            }
+
+                            barChartOptions.datasetFill = false
+                            barChart.Bar(barChartData, barChartOptions)
+                        }
                     }
                     else{
                         addpop(false);
@@ -108,7 +162,7 @@
             });
         });
     </script>
-    <script>
+    <!-- <script>
         $(function(){
             //-------------
             //- BAR CHART -
@@ -116,33 +170,20 @@
             var barChartCanvas                   = document.getElementById('').getContext('2d')
             var barChart                         = new Chart(barChartCanvas)
             var barChartData                     = {
-                labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels  : response.data,
                 datasets: [
                     {
-                        label               : 'Electronics',
+                        label               : response.data,
                         fillColor           : 'rgba(210, 214, 222, 1)',
                         strokeColor         : 'rgba(210, 214, 222, 1)',
                         pointColor          : 'rgba(210, 214, 222, 1)',
                         pointStrokeColor    : '#c1c7d1',
                         pointHighlightFill  : '#fff',
                         pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data                : [65, 59, 80, 81, 56, 55, 40]
-                    },
-                    {
-                        label               : 'Digital Goods',
-                        fillColor           : 'rgba(60,141,188,0.9)',
-                        strokeColor         : 'rgba(60,141,188,0.8)',
-                        pointColor          : '#3b8bba',
-                        pointStrokeColor    : 'rgba(60,141,188,1)',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data                : [28, 48, 40, 19, 86, 27, 90]
+                        data                : [65]
                     }
                 ]
             }
-            barChartData.datasets[1].fillColor   = '#00a65a'
-            barChartData.datasets[1].strokeColor = '#00a65a'
-            barChartData.datasets[1].pointColor  = '#00a65a'
             var barChartOptions                  = {
             //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
             scaleBeginAtZero        : true,
@@ -173,9 +214,21 @@
 
             barChartOptions.datasetFill = false
             barChart.Bar(barChartData, barChartOptions)
-
         })
-    </script>
+    </script> -->
+    <!-- <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('79878da23c4fd7ff4af2', {
+        cluster: 'ap1',
+        forceTLS: true
+        });
+
+        var channel = pusher.subscribe('coba');
+        channel.bind('coba-e', (data) => {
+        });
+    </script> -->
 </div><!-- /.content-wrapper -->
 
 <%- include ('partials/footer') %> 

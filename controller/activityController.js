@@ -1,4 +1,5 @@
 const Activity = require('../models').Activity;
+const EventType = require("../models").EventType;
 
 const showActs = (req, res, next) => {
     Activity.findAll()
@@ -15,6 +16,20 @@ const showActs = (req, res, next) => {
             })
 }
 
+const actsSelect = (req, res, next) => {
+    Activity.findAll({
+                attributes: ['ProjectId'],
+                include: EventType
+            })
+            .then(data => {
+                res.json({
+                    success: true,
+                    data: data
+                })
+            })
+}
+
 module.exports = {
-    showActs:showActs
+    showActs:showActs,
+    actsSelect:actsSelect
 }

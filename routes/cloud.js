@@ -210,6 +210,7 @@ router.get('/activity', auth.checkLogin, developer.devInfo, (req, res, next) => 
 });
 
 router.get('/api/showActs', activity.showActs);
+router.get('/api/actsSelect', activity.actsSelect);
 //#endregion
 
 //#region eventType
