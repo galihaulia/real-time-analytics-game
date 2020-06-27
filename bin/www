@@ -26,29 +26,38 @@ const server = http.createServer(app);
 const socketIo = require('socket.io');
 io = socketIo(server);
 
-var clients = [];
+// var clients = [];
 io.on('connection', (socket) => {
-  // console.log('web connect');
-  // console.log(socket.id);
-  var currentUser;
+  // console.log('New WS Connection...');
+
+  // socket.emit('message', 'Welcom to Service!');
+
+  // socket.broadcast.emit('message', 'A user joined');
+
+  // socket.on('disconnect', () => {
+  //   io.emit('message', 'A user disconnect');
+  // });
+
   socket.on('User Connect', () => {
-    console.log('User Connect');
-    for(var i = 0; i < clients.length; i++){
-      // socket.emit('User Connected', {item:clients[i]});
-      console.log('User Connected is ' + clients[i] , socket.id);
-    }
+    console.log('User Connect ' + socket.id);
+    // for(var i = 0; i < clients.length; i++){
+    //   // socket.emit('User Connected', {item:clients[i]});
+    //   console.log('User Connected is ' + clients[i] , socket.id);
+    // }
   });
 
+  var currentUserData;
   socket.on('Action', (data) => {
     console.log(data);
-    activity(data);
-    currentUser = {
+    // activity(data);
+    currentUserData = {
       item:data.object_name
     }
 
-    clients.push(currentUser);
-    socket.emit('Action', currentUser);
-    socket.broadcast.emit('User Connected', currentUser);
+    // clients.push(currentUserData);
+    // socket.emit('Action', currentUserData);
+    // socket.broadcast.emit('User Connected', currentUserData);
+    io.emit('User Connected', currentUserData);
   });
 
   socket.on('disconnect', () => {
@@ -125,7 +134,7 @@ function activity(data){
           .catch(err => {
             console.log({
               error: true,
-              message: 'error create' + err
+              message: 'error create : ' + err
             })
           })
 }
