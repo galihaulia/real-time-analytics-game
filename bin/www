@@ -22,42 +22,90 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
+const Activity = require('../models').Activity;
+const Project = require('../models').Project;
+
 //#region Socket IO
+const formatMessage = require('../public/js/cloud/activity/formatMessage');
+const {
+  userJoin,
+  getCurrentUser
+} = require('../public/js/cloud/activity/users');
 const socketIo = require('socket.io');
 io = socketIo(server);
 
 // var clients = [];
 io.on('connection', (socket) => {
-  // console.log('New WS Connection...');
 
-  // socket.emit('message', 'Welcom to Service!');
+  socket.on('Join Room', room =>{
+    const user = userJoin(socket.id, room);
+    socket.join(user.room);
+    console.log({
+      success: 'room Join Room',
+      message: user.room
+    })
+  })
 
-  // socket.broadcast.emit('message', 'A user joined');
-
-  // socket.on('disconnect', () => {
-  //   io.emit('message', 'A user disconnect');
-  // });
-
-  socket.on('User Connect', () => {
-    console.log('User Connect ' + socket.id);
+  socket.on('User Connect', (dataConnect) => {
+    console.log('User Connect ' + socket.id + dataConnect);
+    Project
+    .findOne({
+      where:{
+        id: dataConnect.ProjectId
+      },
+      attributes:[
+        'DeveloperId'
+      ]
+    })
+    .then(data => {
+      metaDevId = data.DeveloperId;
+      const user = userJoin(socket.id, metaDevId);
+      socket.join(user.room);
+      console.log({
+        success: 'room User Connect',
+        message: user.room
+        })
+    })
+    .catch(err => {
+      console.log({
+        error: true,
+        message: 'error socket join : '+err
+      })
+    })
     // for(var i = 0; i < clients.length; i++){
     //   // socket.emit('User Connected', {item:clients[i]});
     //   console.log('User Connected is ' + clients[i] , socket.id);
     // }
   });
-
-  var currentUserData;
-  socket.on('Action', (data) => {
-    console.log(data);
-    // activity(data);
-    currentUserData = {
-      item:data.object_name
-    }
-
-    // clients.push(currentUserData);
-    // socket.emit('Action', currentUserData);
-    // socket.broadcast.emit('User Connected', currentUserData);
-    io.emit('User Connected', currentUserData);
+  
+  socket.on('Action', (dataAction) => {
+    console.log(dataAction);
+    Project
+    .findOne({
+      where:{
+        id: dataAction.ProjectId
+      },
+      attributes:[
+        'project_name'
+      ]
+    })
+    .then(data => {
+      metaProjectName = data.project_name;
+      const user = getCurrentUser(socket.id)
+      io.to(user.room).emit('LogAction', formatMessage(metaProjectName, dataAction.object_name));
+      console.log({
+        success: 'room Action',
+        message: user.room
+      })
+    })
+    .catch(err => {
+      console.log({
+        error: true,
+        message: 'error then data : '+err
+      })
+    })
+    activity(dataAction);
+    // actProject(dataAction);
   });
 
   socket.on('disconnect', () => {
@@ -69,8 +117,6 @@ io.on('connection', (socket) => {
 
 //#region Pusher
 const Pusher = require('pusher');
-const Activity = require('../models').Activity;
-const Project = require('../models').Project;
 const keys = require('../config/pusherKeys');
 
 function activity(data){
@@ -88,73 +134,80 @@ function activity(data){
     ProjectId: data.ProjectId,
     EventTypeId: data.EventTypeId
   }
-  Activity.create(dataAct)
-          .then(() => {
-            Project.findOne({
-                      attributes:['id'],
-                      where:{
-                        id: dataAct.ProjectId
-                      }
-                    })
-                    .then(dataId => {
-                      if(!dataId){
-                        console.log({
-                          message: 'id tidak sama',
-                          data:dataId
-                        });
-                      }else{
-                        pusher.trigger('coba', 'coba-e', {
-                          points: 1,
-                          object_name:dataAct.object_name,
-                          ProjectId: dataId
-                        });
-                        console.log({
-                          status: 'succes trigger',
-                          message: 'pusher trigger',
-                        });
-                        console.log({
-                          success: true,
-                          message: 'id sama',
-                          data: dataId
-                        })
-                      }
-                    })
-                    .catch(err => {
-                      console.log({
-                        error: true,
-                        message: 'error findOne Project' + err
-                      })
-                    })
-            console.log({
-              status: 'succes',
-              message: 'create dataAct',
-              data: dataAct
-            })
-          })
-          .catch(err => {
-            console.log({
-              error: true,
-              message: 'error create : ' + err
-            })
-          })
+  // Activity.create(dataAct)
+  //         .then(() => {
+  //           Project.findOne({
+  //                     attributes:['id'],
+  //                     where:{
+  //                       id: dataAct.ProjectId
+  //                     }
+  //                   })
+  //                   .then(dataId => {
+  //                     if(!dataId){
+  //                       console.log({
+  //                         message: 'id tidak sama',
+  //                         data:dataId
+  //                       });
+  //                     }else{
+  //                       pusher.trigger('coba', 'coba-e', {
+  //                         points: 1,
+  //                         object_name:dataAct.object_name,
+  //                         ProjectId: dataId
+  //                       });
+  //                       console.log({
+  //                         status: 'succes trigger',
+  //                         message: 'pusher trigger',
+  //                       });
+  //                       console.log({
+  //                         success: true,
+  //                         message: 'id sama',
+  //                         data: dataId
+  //                       })
+  //                     }
+  //                   })
+  //                   .catch(err => {
+  //                     console.log({
+  //                       error: true,
+  //                       message: 'error findOne Project' + err
+  //                     })
+  //                   })
+  //           console.log({
+  //             status: 'succes',
+  //             message: 'create dataAct',
+  //             data: dataAct
+  //           })
+  //         })
+  //         .catch(err => {
+  //           console.log({
+  //             error: true,
+  //             message: 'error create : ' + err
+  //           })
+  //         })
+  if(dataAct.EventTypeId == '1' || dataAct.EventTypeId ==  '2'){
+    console.log('data id 1 & 2');
+    pusher.trigger('active', 'active-e', {
+      points: 1,
+      object_name:dataAct.object_name
+    });
+    console.log({
+      status: 'succes',
+      message: 'pusher trigger',
+      data: dataAct
+    });
+  }else if(dataAct.EventTypeId == '3' || dataAct.EventTypeId ==  '3'){
+    pusher.trigger('button', 'button-e', {
+      points: 1,
+      object_name:dataAct.object_name
+    });
+  }
 }
-// if(dataAct.EventTypeId == '1' || dataAct.EventTypeId ==  '2'){
-//   console.log('data id 1 & 2');
-//   pusher.trigger('button', 'button-e', {
-//     points: 1,
-//     object_name:dataAct.object_name
-//   });
-//   pusher.trigger('active', 'active-e', {
-//     points: 1,
-//     object_name:dataAct.object_name
-//   });
-//   console.log({
-//     status: 'succes',
-//     message: 'pusher trigger',
-//     data: dataAct
-//   });
 //#endregion
 
+//#region actProject
+function actProject(dataItem){
+  
+}
+//#endregion
 
 /**
  * Listen on provided port, on all network interfaces.

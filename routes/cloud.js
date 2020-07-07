@@ -9,6 +9,7 @@ const project = require('../controller/projectController');
 const genre = require('../controller/genreController');
 const eventType = require('../controller/eventTypeController');
 const activity = require('../controller/activityController');
+const chart = require('../controller/chartController');
 
 // const sessionChecker = (req, res, next) => {
 //     if (req.session_info && req.cookies.user_id) {
@@ -175,11 +176,11 @@ router.get('/dashboard', auth.checkLogin, developer.devInfo, (req, res, next) =>
 //#endregion
 
 //#region chart
-router.get('/chart', auth.checkLogin, developer.devInfo, project.showProject, (req, res, next) => {
+router.get('/chart', auth.checkLogin, developer.devInfo, chart.metaProject, (req, res, next) => {
     res.render('cloud/chart', {
         title: 'Real-Time Analytic Game',
         devInfo: res.devInfo,
-        project: res.dataAllProject
+        project: res.metaProject
     });
 });
 //#endregion

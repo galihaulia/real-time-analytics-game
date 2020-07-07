@@ -100,21 +100,9 @@
                         for (i = 0; i < response.data.length; i++) {
                             var id = response.data[i];
                             var barChartCanvas                   = document.getElementById(id.ProjectId).getContext('2d')
-                            var barChart                         = new Chart(barChartCanvas)
-                            
-                            Pusher.logToConsole = true;
-
-                            var pusher = new Pusher('79878da23c4fd7ff4af2', {
-                            cluster: 'ap1',
-                            forceTLS: true
-                            });
-
-                            var channel = pusher.subscribe('coba');
-                            channel.bind('coba-e', (data) => {
-                            });
-                            
+                            var barChart                         = new Chart(barChartCanvas)                            
                             var barChartData                     = {
-                                labels  : [id.EventType.event_type_name],
+                                labels  : ['Button Up', 'Button Down', 'Incorrect', 'Correct'],
                                 datasets: [
                                     {
                                         label               : 'User Activity',
@@ -124,7 +112,7 @@
                                         pointStrokeColor    : '#c1c7d1',
                                         pointHighlightFill  : '#fff',
                                         pointHighlightStroke: 'rgba(220,220,220,1)',
-                                        data                : [65, 10, 30, 50]
+                                        data                : [65, 10]
                                     }
                                 ]
                             }

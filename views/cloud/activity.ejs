@@ -11,32 +11,41 @@
         </ol>
     </section>
     <div class="box box-widget col-md-12">
-        <div class="box-footer box-comments" id="message">
-            <div class="box-comment">
-                <div class="comment-text">
-                    <span class="username">
-                        Maria Gonzales
-                        <span class="text-muted pull-right">8:03 PM Today</span>
-                    </span>
-                    It is a long established fact that a reader will be distracted
-                    by the readable content of a page when looking at its layout.
-                </div>
-            </div>
-            <div class="box-comment">
-                <div class="comment-text">
-                    <span class="username">
-                        Maria Gonzales
-                        <span class="text-muted pull-right">8:03 PM Today</span>
-                    </span>
-                    It is a long established fact that a reader will be distracted
-                    by the readable content of a page when looking at its layout.
-                </div>
-            </div>
-        </div>
+        <div id="message" class="box-footer box-comments" style="max-height: 550px; overflow-y: scroll;"></div> 
     </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/mainAct.js"></script>
+<!-- <script src="/mainAct.js"></script> -->
+<script>
+    const room = <%- JSON.stringify(devInfo.id) %>;
+    console.log(room);
+
+    const message = document.getElementById('message')
+
+    const socket = io();
+
+    socket.emit('Join Room', room);
+
+    socket.on('LogAction', data => {
+        console.log(data);
+        outputData(data)
+
+        message.scrollTop = message.scrollHeight;
+    });
+
+    function outputData(data){
+        const div = document.createElement('div');
+        div.classList.add('box-comment');
+        div.innerHTML = `<div class="comment-text">
+            <span class="username">
+                ${data.id}
+                <span class="text-muted pull-right">${data.time}</span>
+            </span>
+            ${data.text}
+        </div>`;
+        document.getElementById('message').appendChild(div);
+    };
+</script>
 
 <%- include ('partials/footer') %> 
