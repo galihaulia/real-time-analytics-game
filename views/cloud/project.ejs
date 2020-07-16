@@ -32,7 +32,7 @@
                             <td><%= projects[i].project_name %></td>
                             <td><%= projects[i].project_desc %></td>
                             <td><%= projects[i].link_market %></td>
-                            <td><%= projects[i].genre_name %></td>
+                            <td><%= projects[i].Genre.genre_name %></td>
                         </tr>
                     <% } %>
                 <% } else { %>
@@ -77,7 +77,7 @@
                         <div class="form-group row">
                             <label for="Genre" class="col-sm-2 col-form-label col-form-label-sm">Genre</label>
                             <div class="col-sm-10">
-                                <select id="Genre" class="form-control">
+                                <select id="Genre" name="genreId" class="form-control">
                                     <option selected>Choose...</option>
                                     <% if(genres) { %>
                                         <% for(var i=0; i < genres.length; i++) { %>

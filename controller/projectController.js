@@ -8,7 +8,7 @@ const createProject = (req, res, next) => {
         project_desc: req.body.project_desc,
         link_market: req.body.link_market,
         DeveloperId: req.body.developerId,
-        GenreId: req.body.GenreId
+        GenreId: req.body.genreId
     }
     Project
     .create(dataCreateProject)
