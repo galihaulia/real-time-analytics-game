@@ -1,45 +1,46 @@
 const Genre = require("../models").Genre;
 
-const create = (req, res, next) => {
-    const dataCreate = {
+const createGenre = (req, res, next) => {
+    const dataCreateGenre = {
         genre_name: req.body.genre_name
     }
     Genre
-    .create(dataCreate)
+    .create(dataCreateGenre)
     .then(data => {
         res.json({
             success: true,
-            message: 'dataCreate Genre successfully',
-            dataCreate: data
+            message: 'dataCreateGenre Genre successfully',
+            dataCreateGenre: data
         });
     })
     .catch(err => {
         res.json({
             error: true,
-            message: `error dataCreate Genre : ` + err
+            message: `error dataCreateGenre Genre : ` + err
         });
     });
 }
 
-const showGenre = (req, res, next) => {
+const showAllGenre = (req, res, next) => {
     Genre
     .findAll()
     .then(data => {
         console.log({
             success: true,
             message: 'findAll successfully',
-            dataAllGenre: data
+            showAllGenre: data
         });
-        res.dataAllGenre = data;
+        res.showAllGenre = data;
         console.log({
             success: true,
             message: 'res successfull',
-            dataAllGenre: res.dataAllGenre
+            showAllGenre: res.showAllGenre
         });
         next();
     })
 }
+
 module.exports = {
-    create: create,
-    showGenre: showGenre
+    createGenre: createGenre,
+    showAllGenre: showAllGenre
 }

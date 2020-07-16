@@ -25,14 +25,14 @@
                 </tr>
             </thead>
             <tbody>
-                <% if (project) { %>
-                    <% for( let i = 0; i < project.length; i++ ) { %>
+                <% if (projects) { %>
+                    <% for( let i = 0; i < projects.length; i++ ) { %>
                         <tr>
-                            <td><%= project[i].id %></td>
-                            <td><%= project[i].project_name %></td>
-                            <td><%= project[i].project_desc %></td>
-                            <td><%= project[i].link_market %></td>
-                            <td><%= project[i].genre_name %></td>
+                            <td><%= projects[i].id %></td>
+                            <td><%= projects[i].project_name %></td>
+                            <td><%= projects[i].project_desc %></td>
+                            <td><%= projects[i].link_market %></td>
+                            <td><%= projects[i].genre_name %></td>
                         </tr>
                     <% } %>
                 <% } else { %>
@@ -79,9 +79,9 @@
                             <div class="col-sm-10">
                                 <select id="Genre" class="form-control">
                                     <option selected>Choose...</option>
-                                    <% if(genre) { %>
-                                        <% for(var i=0; i < genre.length; i++) { %>
-                                            <option value= '<%= genre[i].id %>'><%= genre[i].genre_name %></option>
+                                    <% if(genres) { %>
+                                        <% for(var i=0; i < genres.length; i++) { %>
+                                            <option value= '<%= genres[i].id %>'><%= genres[i].genre_name %></option>
                                         <% } %>
                                     <% } %>
                                 </select>

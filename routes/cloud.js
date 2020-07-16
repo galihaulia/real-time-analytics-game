@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models').User;
 
-const auth = require('../controller/authController');
-const developer = require('../controller/developerController');
-const dashboard = require('../controller/dashboardController');
-const project = require('../controller/projectController');
-const genre = require('../controller/genreController');
-const eventType = require('../controller/eventTypeController');
-const activity = require('../controller/activityController');
-const chart = require('../controller/chartController');
+const authController = require('../controller/authController');
+const developerController = require('../controller/developerController');
+const projectController = require('../controller/projectController');
+const genreController = require('../controller/genreController');
+const eventTypeController = require('../controller/eventTypeController');
+const activityController = require('../controller/activityController');
 
+//#region aaaa
 // const sessionChecker = (req, res, next) => {
 //     if (req.session_info && req.cookies.user_id) {
 //         req.session_info = req.session;
@@ -25,11 +23,13 @@ const chart = require('../controller/chartController');
 // router.get('/', (req, res, next) => {
 //     res.render('landing', {layout: 'layout_LandingPage'});
 // });
+//#endregion
 
-router.post('/auth/login', auth.login);
-router.post('/auth/signup', auth.signup);
-router.get('/auth/edit/:id', auth.edit);
-router.put('/auth/update', auth.update);
+router.post('/auth/login', authController.login);
+router.post('/auth/signup', authController.signup);
+router.get('/auth/edit/:id', authController.edit);
+router.post('/auth/update', authController.update);
+router.get('/auth/logout', authController.logout);
 
 //#region signup
 router.get('/signup', (req, res, next) => {
@@ -156,10 +156,11 @@ router.get('/login', (req, res, next) => {
 //#endregion
 
 //#region dashboard
-router.get('/dashboard', auth.checkLogin, developer.devInfo, (req, res, next) => {
+router.get('/dashboard', authController.checkLogin, developerController.devInfo, projectController.showProjectName, (req, res, next) => {
     res.render('cloud/dashboard', {
         title: 'Real-Time Analytic Game',
-        devInfo: res.devInfo
+        devInfo: res.devInfo,
+        projectNames: res.showProjectName
     });
 
     //#region dashboard awal
@@ -176,55 +177,55 @@ router.get('/dashboard', auth.checkLogin, developer.devInfo, (req, res, next) =>
 //#endregion
 
 //#region chart
-router.get('/chart', auth.checkLogin, developer.devInfo, chart.metaProject, (req, res, next) => {
+router.get('/chart', authController.checkLogin, developerController.devInfo, projectController.showProjectName, (req, res, next) => {
     res.render('cloud/chart', {
         title: 'Real-Time Analytic Game',
         devInfo: res.devInfo,
-        project: res.metaProject
+        projectNames: res.showProjectName
     });
 });
 //#endregion
 
 //#region project
-router.get('/project', auth.checkLogin, developer.devInfo, project.showProject, genre.showGenre, (req, res, next) => {
+router.get('/project', authController.checkLogin, developerController.devInfo, projectController.showAllProject, genreController.showAllGenre, (req, res, next) => {
     res.render('cloud/project', {
         title: 'Real-Time Analytic Game',
         devInfo: res.devInfo,
-        project: res.dataAllProject,
-        genre: res.dataAllGenre
+        projects: res.showAllProject,
+        genres: res.showAllGenre
     });
 });
 
-router.post('/project', project.createProject);
+router.post('/project', projectController.createProject);
 //#endregion
 
 //#region genre
-router.post('/genre', genre.create);
+router.post('/genre', genreController.createGenre);
 //#endregion
 
 //#region activity
-router.get('/activity', auth.checkLogin, developer.devInfo, (req, res, next) => {
+router.get('/activity', authController.checkLogin, developerController.devInfo, (req, res, next) => {
     res.render('cloud/activity', {
         title: 'Real-Time Analytic Game',
         devInfo: res.devInfo
     });
 });
 
-router.get('/api/showActs', activity.showActs);
-router.get('/api/actsSelect', activity.actsSelect);
+router.get('/api/showActs', activityController.showActs);
+router.get('/api/actsSelect/:idProject', activityController.actsSelect);
 //#endregion
 
 //#region eventType
-router.get('/eventType', auth.checkLogin, developer.devInfo, project.showProject, eventType.showEvent, (req, res, next) => {
+router.get('/eventType', authController.checkLogin, developerController.devInfo, projectController.showAllProject, eventTypeController.showAllEvent, (req, res, next) => {
     res.render('cloud/eventType', {
         title: 'Real-Time Analytic Game',
         devInfo: res.devInfo,
-        project: res.dataAllProject,
-        eventType: res.dataAllEventType
+        projects: res.showAllProject,
+        eventTypes: res.showAllEvent
     });
 });
 
-router.post('/eventType', eventType.create);
+router.post('/eventType', eventTypeController.createEvent);
 //#endregion
 
 //#region logout
@@ -241,9 +242,9 @@ router.get('/logout', (req, res) => {
 //#endregion
 
 //#region profile
-router.get('/profile', auth.checkLogin, developer.devInfo, (req, res, next) => {
-    res.render('profile', {
-        layout: 'layout_AdminPanel',
+router.get('/profile', authController.checkLogin, developerController.devInfo, (req, res, next) => {
+    res.render('cloud/profile', {
+        title: 'Real-Time Analytic Game',
         devInfo: res.devInfo
     });
 
@@ -291,30 +292,34 @@ router.get('/profile', auth.checkLogin, developer.devInfo, (req, res, next) => {
     // }
     //#endregion
 });
-// router.post('/profileUpdate', (req, res, next) => {
-//     const dataUser = {
-//         developer_name: req.body.developer_name,
-//         email: req.body.email,
-//         username: req.body.username,
-//         description: req.body.description,
-//         address: req.body.address,
-//         phone: req.body.phone
-//     }
-//     User.update(dataUser, {
-//             where:{
-//                 id: parseInt(req.session.user.id) 
-//             }
-//         })
-//         .then(user => {
-//             req.session.user = user.dataValue;
-//             // res.redirect('/profile');
-//             res.json(user.dataValue)
-//         })
-//         .catch(err => {
-//             // res.redirect('/signup');
-//             res.send('gagal update');
-//         });
-// })
+    //#region awal
+    // router.post('/profileUpdate', (req, res, next) => {
+    //     const dataUser = {
+    //         developer_name: req.body.developer_name,
+    //         email: req.body.email,
+    //         username: req.body.username,
+    //         description: req.body.description,
+    //         address: req.body.address,
+    //         phone: req.body.phone
+    //     }
+    //     User.update(dataUser, {
+    //             where:{
+    //                 id: parseInt(req.session.user.id) 
+    //             }
+    //         })
+    //         .then(user => {
+    //             req.session.user = user.dataValue;
+    //             // res.redirect('/profile');
+    //             res.json(user.dataValue)
+    //         })
+    //         .catch(err => {
+    //             // res.redirect('/signup');
+    //             res.send('gagal update');
+    //         });
+    // })
+    //#endregion
 //#endregion
+
+
 
 module.exports = router;

@@ -1,49 +1,49 @@
 const EventType = require("../models").EventType;
 const Project = require("../models").Project;
 
-const create = (req, res, next) => {
+const createEvent = (req, res, next) => {
 
-    const dataCreate = {
+    const dataCreateEvent = {
         event_type_name: req.body.event_type_name
     }
 
     EventType
-    .create(dataCreate)
+    .create(dataCreateEvent)
     .then(data => {
         res.json({
             success: true,
-            message: 'dataCreate EventType successfully',
-            dataCreate: data
+            message: 'createEvent EventType successfully',
+            createEvent: data
         });
     })
     .catch(err => {
         res.json({
             error: true,
-            message: 'dataCreate EventType error : ' +err
+            message: 'createEvent EventType error : ' +err
         });
     });
 }
 
-const showEvent = (req, res, next) => {
+const showAllEvent = (req, res, next) => {
     EventType
     .findAll()
     .then(data => {
         console.log({
             success: true,
-            message: 'ProjectShow findAll successfully',
-            dataAllEventType: data
+            message: 'showAllEvent findAll successfully',
+            showAllEvent: data
         });
-        res.dataAllEventType = data;
+        res.showAllEvent = data;
         console.log({
             success: true,
-            message: 'res.dataAllEventType successfully',
-            dataAllEventType_res_dataAllEventType: res.dataAllEventType
+            message: 'res.showAllEvent successfully',
+            showAllEvent_res_showAllEvent: res.showAllEvent
         });
         next()
     })
 }
 
 module.exports = {
-    create: create,
-    showEvent:showEvent
+    createEvent: createEvent,
+    showAllEvent:showAllEvent
 }

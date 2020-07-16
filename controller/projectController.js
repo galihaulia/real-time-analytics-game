@@ -1,8 +1,34 @@
 const Project = require("../models").Project;
 const Genre = require("../models").Genre;
+const Activity = require("../models").Activity;
 
-const showProject = (req, res, next) => {
-    console.log('project')
+const createProject = (req, res, next) => {
+    const dataCreateProject = {
+        project_name: req.body.project_name,
+        project_desc: req.body.project_desc,
+        link_market: req.body.link_market,
+        DeveloperId: req.body.developerId,
+        GenreId: req.body.GenreId
+    }
+    Project
+    .create(dataCreateProject)
+    .then(data => {
+        console.log({
+            success: true,
+            message: 'dataCreateProject successfully',
+            dataCreateProject: data
+        });
+        res.redirect('/cloud/project')
+    })
+    .catch(function (err) {
+        res.json({
+            error: true,
+            message: 'error dataCreateProject : ' + err
+        });
+    });
+}
+
+const showAllProject = (req, res, next) => {
     Project
     .findAll({
         where: {
@@ -14,13 +40,13 @@ const showProject = (req, res, next) => {
         console.log({
             success: true,
             message: 'ProjectShow findAll successfully',
-            dataAllProject: data
+            showAllProject: data
         });
-        res.dataAllProject = data;
+        res.showAllProject = data;
         console.log({
             success: true,
-            message: 'res.dataAllProject successfully',
-            dataAllProject_res_dataAllProject: res.dataAllProject
+            message: 'res.showAllProject successfully',
+            showAllProject_res_showAllProject: res.showAllProject
         });
         next();
     })
@@ -33,33 +59,46 @@ const showProject = (req, res, next) => {
     })
 }
 
-const createProject = (req, res, next) => {
-    const dataProjectCreate = {
-        project_name: req.body.project_name,
-        project_desc: req.body.project_desc,
-        link_market: req.body.link_market,
-        DeveloperId: req.body.developerId,
-        GenreId: req.body.GenreId
-    }
+const showProjectName = (req, res, next) => {
     Project
-    .create(dataProjectCreate)
+    .findAll({
+        where: {
+            DeveloperId: req.session.developerId
+        },
+        attributes: [
+            'id',
+            'project_name'
+        ],
+        include:[Activity]
+    })
     .then(data => {
+        
+        res.showProjectName = data;
+        // res.json({
+        //     success: true,
+        //     data: res.showProjectName
+        // })
         console.log({
             success: true,
-            message: 'dataProjectCreate successfully',
-            dataProjectCreate: data
-        });
-        res.redirect('/cloud/project')
+            message: 'success res.showProjectName',
+            data: res.showProjectName
+        })
+        next()
     })
-    .catch(function (err) {
+    .catch(err => {
         res.json({
             error: true,
-            message: 'error dataProjectCreate : ' + err
-        });
-    });
+            message: 'error findAll : '+err
+        })
+        console.log({
+            error: true,
+            message: 'error findAll : '+err
+        })
+    })
 }
 
 module.exports = {
-    showProject: showProject,
-    createProject: createProject
+    createProject: createProject,
+    showAllProject: showAllProject,
+    showProjectName: showProjectName,
 }

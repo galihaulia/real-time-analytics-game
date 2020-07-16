@@ -151,47 +151,46 @@ const update = (req, res, next) => {
         address: req.body.address,
         phone: req.body.phone
     }
+    const where = {
+        id: req.body.developerId
+    }
 
     Developer
-    .findOne({
-        where:{
-            id: req.body.developerId
-        }
-    })
-    .then(() => {
+    .update(dataDeveloper, where)
+    .then(data => {
+        req.session.developerId = req.body.id;
+        req.session.developer_name = req.body.developer_name;
+        req.session.email = req.body.email
         console.log({
             success: true,
-            message: 'findOne update success'
-        })
-        Developer
-        .update(dataDeveloper)
-        .then(data => {
-            req.session.developerId = req.body.id;
-            req.session.developer_name = req.body.developer_name;
-            req.session.email = req.body.email
-            console.log({
-                success: true,
-                message: 'Update data developer success',
-                data: data,
-                id: req.session.developerId,
-                devName: req.session.developer_name,
-                email: req.session.email
-            });
-            res.redirect('/profile');
-        })
-        .catch(err => {
-            res.status(400).json({
-                error: true,
-                message: 'Update data developer error : '+err
-            });
+            message: 'Update data developer success',
+            data: data,
+            id: req.session.developerId,
+            devName: req.session.developer_name,
+            email: req.session.email
         });
+        res.redirect('cloud/profile');
     })
     .catch(err => {
         res.status(400).json({
             error: true,
-            message: 'Update findOne error : '+err
+            message: 'Update data developer error : '+err
         });
     })
+}
+
+const logout = (req, res, next) => {
+    if (req.session) {
+        req.session.destroy((err) => {
+            if(err) {
+                return next(err);
+            } else {
+                return res.redirect('/cloud/login');
+            }
+        });
+    }else {
+        res.redirect('/cloud/login');
+    }
 }
 
 module.exports = {
@@ -199,5 +198,6 @@ module.exports = {
     login: login,
     signup: signup,
     edit: edit,
-    update: update
+    update: update,
+    logout: logout
 }

@@ -18,11 +18,8 @@
 <script src="/socket.io/socket.io.js"></script>
 <!-- <script src="/mainAct.js"></script> -->
 <script>
-    const room = <%- JSON.stringify(devInfo.id) %>;
-    console.log(room);
-
+    const room = `<%- JSON.stringify(devInfo.id) %>`
     const message = document.getElementById('message')
-
     const socket = io();
 
     socket.emit('Join Room', room);
@@ -33,7 +30,7 @@
 
         message.scrollTop = message.scrollHeight;
     });
-
+    
     function outputData(data){
         const div = document.createElement('div');
         div.classList.add('box-comment');
