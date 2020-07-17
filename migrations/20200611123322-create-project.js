@@ -2,29 +2,30 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Projects', {
-      id: {
+      id:{
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
       },
-      project_name: {
-        allowNull: true,
-        type: Sequelize.STRING
+      project_name:{
+        type: Sequelize.STRING,
+        allowNull: false
       },
       project_desc:{
         allowNull: true,
         type: Sequelize.TEXT
       },
-      link_market: {
+      link_market:{
         allowNull: true,
         type: Sequelize.TEXT
       },
-      DeveloperId: {
+      DeveloperId:{
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      GenreId: {
+      GenreId:{
         allowNull: false,
         type: Sequelize.INTEGER
       },

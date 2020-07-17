@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     genre_desc:{
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true
     },
   }, {});
 

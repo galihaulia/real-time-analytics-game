@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     project_desc:{
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     link_market:{
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     DeveloperId:{
       type: DataTypes.INTEGER,
@@ -22,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     GenreId:{
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false
     },
   }, {});
 

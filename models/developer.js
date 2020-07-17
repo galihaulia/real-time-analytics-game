@@ -20,13 +20,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     description:{
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     address:{
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     phone:{
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true
     },
   }, {});
 

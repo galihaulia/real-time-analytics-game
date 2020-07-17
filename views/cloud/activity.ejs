@@ -16,13 +16,16 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<!-- <script src="/mainAct.js"></script> -->
 <script>
     const room = `<%- JSON.stringify(devInfo.id) %>`
     const message = document.getElementById('message')
     const socket = io();
 
     socket.emit('Join Room', room);
+    console.log({
+        success: 'room Join Room',
+        message: room
+    })
 
     socket.on('LogAction', data => {
         console.log(data);

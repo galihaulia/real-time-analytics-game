@@ -1,6 +1,7 @@
 let dataActive = [
     { label:'Incorrect', y:0},
-    { label:'Correct', y:0}
+    { label:'Correct', y:0},
+    { label:'Shop', y:0}
 ];
 
 const chartKeberhasilan = document.querySelector('#chartKeberhasilan');

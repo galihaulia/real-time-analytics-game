@@ -74,10 +74,6 @@ const showProjectName = (req, res, next) => {
     .then(data => {
         
         res.showProjectName = data;
-        // res.json({
-        //     success: true,
-        //     data: res.showProjectName
-        // })
         console.log({
             success: true,
             message: 'success res.showProjectName',

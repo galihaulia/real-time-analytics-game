@@ -4,26 +4,25 @@
  * Module dependencies.
  */
 
-const app = require('../app');
-const debug = require('debug')('knex-nodejs:server');
-const http = require('http');
-const db = require('../models');
+var app = require('../app');
+var debug = require('debug')('analyticgame:server');
+var http = require('http');
+var db = require('../models');
+var Activity = db.Activity;
+var Project = db.Project;
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
-
-const Activity = require('../models').Activity;
-const Project = require('../models').Project;
+var server = http.createServer(app);
 
 //#region Socket IO
 const formatMessage = require('../public/js/cloud/activity/formatMessage');
@@ -38,7 +37,7 @@ io.on('connection', (socket) => {
     const user = userJoin(socket.id, room);
     socket.join(user.room);
     console.log({
-      success: 'room Join Room',
+      success: 'server room Join Room',
       message: user.room
     })
   })
@@ -69,12 +68,8 @@ io.on('connection', (socket) => {
         message: 'error socket join : '+err
       })
     })
-    // for(var i = 0; i < clients.length; i++){
-    //   // socket.emit('User Connected', {item:clients[i]});
-    //   console.log('User Connected is ' + clients[i] , socket.id);
-    // }
   });
-  
+
   socket.on('Action', (dataAction) => {
     console.log(dataAction);
     Project
@@ -102,13 +97,12 @@ io.on('connection', (socket) => {
       })
     })
     activity(dataAction);
-    // actProject(dataAction);
   });
 
   socket.on('disconnect', () => {
     console.log('User disconnect is', socket.id);
-    // socket.emit('User Disconnected', socket.id);
   });
+
 });
 //#endregion
 
@@ -134,19 +128,10 @@ function activity(dataAction){
     Activity
     .create(dataAct)
     .then(() => {
-      if(dataAct.EventTypeId == '1' || dataAct.EventTypeId ==  '2'){
-        console.log('data id 1 & 2');
-        pusher.trigger('active', 'active-e', {
-          points: 1,
-          object_name:dataAct.object_name
-        });
-      }else if(dataAct.EventTypeId == '3' || dataAct.EventTypeId ==  '3'){
-        console.log('data id 3 & 4');
-        pusher.trigger('button', 'button-e', {
-          points: 1,
-          object_name:dataAct.object_name
-        });
-      }
+      pusher.trigger('active', 'active-e', {
+        points: 1,
+        object_name:dataAct.object_name
+      });
       console.log({
         status: 'succes',
         message: 'dataAct Create',

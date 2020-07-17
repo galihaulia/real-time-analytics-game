@@ -45,26 +45,10 @@
         <div class="row">
             <!-- /.col (LEFT) -->
             <div class="col-md-6">
-                <!-- BUTTON PUSH CHART -->
-                <!-- <div class="box"> -->
-                    <!-- <div class="box-header with-border"> -->
-                        <!-- <h3 class="box-title">Button Push Chart</h3> -->
-                        <!-- <div class="box-tools pull-right"> -->
-                            <!-- <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button> -->
-                            <!-- <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
-                        <!-- </div> -->
-                    <!-- </div> -->
-                    <!-- <div class="box-body"> -->
-                        <!-- <div id="chartButtonPush" style="height:230px"></div> -->
-                    <!-- </div> -->
-                    <!-- /.box-body -->
-                <!-- </div> -->
-                <!-- /.box -->
-
                 <!-- Chart Keberhasilan Pemain -->
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Chart Keberhasilan Pemain</h3>
+                        <h3 class="box-title">Aktivitas Pemain</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -88,133 +72,10 @@
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pusher/5.0.2/pusher.min.js" integrity="sha256-vOxviKM/QBcMYxoY51Rbfk1ePvAeH/PNSRLv1egfhts=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" integrity="sha256-CIc5A981wu9+q+hmFYYySmOvsA3IsoX+apaYlL0j6fg=" crossorigin="anonymous"></script>
-    <script src="/js/cloud/dashboard/dashButtonChart.js"></script>
-    <script src="/js/cloud/dashboard/dashIncorrectChart.js"></script>
-    <script src="/components/chart.js/Chart.js"></script>
-    <script>
-        $(document).ready(function() {
-            $.ajax({
-                url: '/cloud/api/actsSelect',
-                success:function(result,status){
-                    response = result;
-                    console.log(response);
-                    if(response.success == true){
-                        for (i = 0; i < response.data.length; i++) {
-                            var id = response.data[i];
-                            var barChartCanvas                   = document.getElementById(id.ProjectId).getContext('2d')
-                            var barChart                         = new Chart(barChartCanvas)                            
-                            var barChartData                     = {
-                                labels  : ['Button Up', 'Button Down', 'Incorrect', 'Correct'],
-                                datasets: [
-                                    {
-                                        label               : 'User Activity',
-                                        fillColor           : 'rgba(210, 214, 222, 1)',
-                                        strokeColor         : 'rgba(210, 214, 222, 1)',
-                                        pointColor          : 'rgba(210, 214, 222, 1)',
-                                        pointStrokeColor    : '#c1c7d1',
-                                        pointHighlightFill  : '#fff',
-                                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                                        data                : [65, 10]
-                                    }
-                                ]
-                            }
-                            var barChartOptions                  = {
-                            //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-                            scaleBeginAtZero        : true,
-                            //Boolean - Whether grid lines are shown across the chart
-                            scaleShowGridLines      : true,
-                            //String - Colour of the grid lines
-                            scaleGridLineColor      : 'rgba(0,0,0,.05)',
-                            //Number - Width of the grid lines
-                            scaleGridLineWidth      : 1,
-                            //Boolean - Whether to show horizontal lines (except X axis)
-                            scaleShowHorizontalLines: true,
-                            //Boolean - Whether to show vertical lines (except Y axis)
-                            scaleShowVerticalLines  : true,
-                            //Boolean - If there is a stroke on each bar
-                            barShowStroke           : true,
-                            //Number - Pixel width of the bar stroke
-                            barStrokeWidth          : 2,
-                            //Number - Spacing between each of the X value sets
-                            barValueSpacing         : 5,
-                            //Number - Spacing between data sets within X values
-                            barDatasetSpacing       : 1,
-                            //String - A legend template
-                            legendTemplate          : '<ul class="%=name.toLowerCase()%>-legend">% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:%=datasets[i].fillColor%>"></span>%if(datasets[i].label){%>%=datasets[i].label%>%}%></li>%}%></ul>',
-                            //Boolean - whether to make the chart responsive
-                            responsive              : true,
-                            maintainAspectRatio     : true
-                            }
-
-                            barChartOptions.datasetFill = false
-                            barChart.Bar(barChartData, barChartOptions)
-                        }
-                    }
-                    else{
-                        addpop(false);
-                    }
-                }
-            });
-        });
-    </script>
-    <!-- <script>
-        $(function(){
-            //-------------
-            //- BAR CHART -
-            //-------------
-            var barChartCanvas                   = document.getElementById('').getContext('2d')
-            var barChart                         = new Chart(barChartCanvas)
-            var barChartData                     = {
-                labels  : response.data,
-                datasets: [
-                    {
-                        label               : response.data,
-                        fillColor           : 'rgba(210, 214, 222, 1)',
-                        strokeColor         : 'rgba(210, 214, 222, 1)',
-                        pointColor          : 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor    : '#c1c7d1',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data                : [65]
-                    }
-                ]
-            }
-            var barChartOptions                  = {
-            //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-            scaleBeginAtZero        : true,
-            //Boolean - Whether grid lines are shown across the chart
-            scaleShowGridLines      : true,
-            //String - Colour of the grid lines
-            scaleGridLineColor      : 'rgba(0,0,0,.05)',
-            //Number - Width of the grid lines
-            scaleGridLineWidth      : 1,
-            //Boolean - Whether to show horizontal lines (except X axis)
-            scaleShowHorizontalLines: true,
-            //Boolean - Whether to show vertical lines (except Y axis)
-            scaleShowVerticalLines  : true,
-            //Boolean - If there is a stroke on each bar
-            barShowStroke           : true,
-            //Number - Pixel width of the bar stroke
-            barStrokeWidth          : 2,
-            //Number - Spacing between each of the X value sets
-            barValueSpacing         : 5,
-            //Number - Spacing between data sets within X values
-            barDatasetSpacing       : 1,
-            //String - A legend template
-            legendTemplate          : '<ul class="%=name.toLowerCase()%>-legend">% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:%=datasets[i].fillColor%>"></span>%if(datasets[i].label){%>%=datasets[i].label%>%}%></li>%}%></ul>',
-            //Boolean - whether to make the chart responsive
-            responsive              : true,
-            maintainAspectRatio     : true
-            }
-
-            barChartOptions.datasetFill = false
-            barChart.Bar(barChartData, barChartOptions)
-        })
-    </script> -->
-    
+    <script src="/js/cloud/dashboard/dashIncorrectChart.js"></script>    
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const room = `<%- JSON.stringify(devInfo.id) %>`
@@ -222,6 +83,10 @@
         const socket = io();
 
         socket.emit('Join Room', room);
+        console.log({
+            success: 'room Join Room',
+            message: room
+        })
 
         socket.on('LogAction', data => {
             console.log(data);

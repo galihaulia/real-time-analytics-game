@@ -6,8 +6,6 @@ const devInfo = (req, res, next) => {
     .findOne({
         where: {
             id: req.session.developerId
-            // developer_name: req.session.developer_name,
-            // email: req.session.email
         }
     })
     .then(data => {

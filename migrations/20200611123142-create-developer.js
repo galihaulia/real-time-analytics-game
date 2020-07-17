@@ -8,38 +8,33 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      developer_name:{
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      email: {
-        allowNull: false,
+      developer_name:{ 
         type: Sequelize.STRING,
-        unique: true
+        allowNull: false
       },
-      username: {
-        allowNull: false,
-        type: Sequelize.STRING
+      email:{
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      password: {
-        allowNull: false,
-        type: Sequelize.STRING
+      username:{
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      password:{
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description:{
-        allowNull: true,
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       address:{
-        allowNull: true,
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       phone:{
-        allowNull: true,
-        type: Sequelize.STRING
-      },
-      status_activation: {
-        allowNull: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
