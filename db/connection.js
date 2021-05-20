@@ -13,8 +13,7 @@
 
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('knex-nodejs', 'postgres', 'galih', {
-  host: 'localhost',
+const sequelize = new Sequelize(process.env.DATABASE_URL || 'realtime_base', 'postgres', 'galih', {
   dialect: 'postgres'
 });
 

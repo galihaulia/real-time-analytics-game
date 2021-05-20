@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "galih",
-    "database": "knex-nodejs",
+    "database": "realtime_base",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -10,7 +10,7 @@
   "test": {
     "username": "postgres",
     "password": "galih",
-    "database": "knex-nodejs",
+    "database": "realtime_base",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
@@ -18,7 +18,7 @@
   "production": {
     "username": "postgres",
     "password": "galih",
-    "database": "knex-nodejs",
+    "database": "realtime_base",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "operatorsAliases": false
