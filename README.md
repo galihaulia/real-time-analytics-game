@@ -1,9 +1,19 @@
-# Real-Time Game Analytics Web Service
+# Real-Time Analytics Game 🎮📊
 
-## Architecture
-PostgreSQL, Node JS, Socket.Io, Express JS, EJS, Boostrap 
+A backend web service for tracking real-time game analytics using WebSocket, Express.js, and MongoDB.
 
-## step to run in local
-1. run ```npm install```
-2. prepare local database in [config](https://github.com/galihaulia/Real-Time_Analytic_Game/blob/master/config/config.json)
-3. run ```npm test``` 
+## 🛠 Tech Stack
+- Node.js
+- Express.js
+- MongoDB
+- WebSocket (Socket.IO)
+
+## 🚀 Features
+- Realtime analytics updates
+- WebSocket broadcasting
+- Modular API structure
+
+## 📦 Setup
+```bash
+npm install
+npm start
